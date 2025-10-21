@@ -15,13 +15,13 @@ const GenerationStudio: React.FC<GenerationStudioProps> = ({
     const [prompt, setPrompt] = useState(initialPrompt);
     const [style, setStyle] = useState(initialStyle);
     const [image, setImage] = useState<File | null>(null);
-    const [preview, setPreview] = useState<string | null>(initialImageUrl ? `http://localhost:3001${initialImageUrl}` : null);
+    const [preview, setPreview] = useState<string | null>(initialImageUrl ? `${import.meta.env.VITE_API_BASE_URL}${initialImageUrl}` : null);
     const { isLoading, error, generate, abort } = useGenerate();
 
     useEffect(() => {
         setPrompt(initialPrompt);
         setStyle(initialStyle);
-        setPreview(initialImageUrl ? `http://localhost:3001${initialImageUrl}` : null);
+        setPreview(initialImageUrl ? `${import.meta.env.VITE_API_BASE_URL}${initialImageUrl}` : null);
     }, [initialPrompt, initialStyle, initialImageUrl]);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

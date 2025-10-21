@@ -4,10 +4,9 @@ import api from '../api';
 const useGenerate = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [retries, setRetries] = useState(0);
     const abortControllerRef = useRef<AbortController | null>(null);
 
-    const generate = async (formData: FormData) => {
+    const generate = async (formData: FormData, currentRetries = 0) => {
         setIsLoading(true);
         setError(null);
         abortControllerRef.current = new AbortController();
@@ -19,10 +18,9 @@ const useGenerate = () => {
             setIsLoading(false);
             return response.data;
         } catch (err) {
-            if ((err as any).response && (err as any).response.status === 500 && retries < 3) {
-                setRetries(retries + 1);
+            if ((err as any).response && (err as any).response.status === 500 && currentRetries < 3) {
                 await new Promise((resolve) => setTimeout(resolve, 1000));
-                return generate(formData);
+                return generate(formData, currentRetries + 1);
             }
             setError('Error generating image');
             setIsLoading(false);

@@ -4,7 +4,9 @@ import { authMiddleware } from '../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', authMiddleware, createGeneration);
+import upload from '../middlewares/uploadMiddleware';
+
+router.post('/', authMiddleware, upload.single('imageUpload'), createGeneration);
 router.get('/', authMiddleware, getGenerations);
 
 export default router;
