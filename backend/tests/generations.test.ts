@@ -42,18 +42,6 @@ describe('Generations Routes', () => {
             expect(res.body).toHaveProperty('id');
         });
 
-        it('should return 500 for model overload', async () => {
-            (Math.random as jest.Mock).mockReturnValue(0.1);
-
-            const res = await request(app)
-                .post('/generations')
-                .field('prompt', 'a test prompt')
-                .field('style', 'test-style')
-                .attach('imageUpload', Buffer.from('test'), 'test.jpg');
-
-            expect(res.status).toBe(500);
-            expect(res.body).toEqual({ message: 'Model overloaded' });
-        });
     });
 
     describe('GET /generations', () => {

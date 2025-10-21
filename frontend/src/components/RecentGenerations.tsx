@@ -30,7 +30,7 @@ const RecentGenerations: React.FC<RecentGenerationsProps> = ({ onRestore }) => {
                         onClick={() => onRestore(gen)}
                     >
                         <img
-                            src={`http://localhost:3001${gen.imageUrl}`}
+                            src={`${import.meta.env.VITE_API_BASE_URL}${gen.imageUrl}`}
                             alt={gen.prompt}
                             className="w-full h-32 object-cover rounded"
                         />
