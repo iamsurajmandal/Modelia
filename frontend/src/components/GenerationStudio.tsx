@@ -16,7 +16,8 @@ const GenerationStudio: React.FC<GenerationStudioProps> = ({
     const [style, setStyle] = useState(initialStyle);
     const [image, setImage] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(initialImageUrl ? `${import.meta.env.VITE_API_BASE_URL}${initialImageUrl}` : null);
-    const { isLoading, error, generate, abort } = useGenerate();
+    const { isLoading, error, generate, abort, tryAgain } = useGenerate();
+    const [formData, setFormData] = useState<FormData | null>(null);
 
     useEffect(() => {
         setPrompt(initialPrompt);
@@ -36,14 +37,14 @@ const GenerationStudio: React.FC<GenerationStudioProps> = ({
         e.preventDefault();
         if (!image && !initialImageUrl) return;
 
-        const formData = new FormData();
-        formData.append('prompt', prompt);
-        formData.append('style', style);
+        const newFormData = new FormData();
+        newFormData.append('prompt', prompt);
+        newFormData.append('style', style);
         if (image) {
-            formData.append('imageUpload', image);
+            newFormData.append('imageUpload', image);
         }
-
-        await generate(formData);
+        setFormData(newFormData);
+        await generate(newFormData);
     };
 
     return (
@@ -86,7 +87,14 @@ const GenerationStudio: React.FC<GenerationStudioProps> = ({
                         Abort
                     </button>
                 )}
-                {error && <p className="text-red-500 mt-2">{error}</p>}
+                {error && (
+                    <div>
+                        <p className="text-red-500 mt-2">{error}</p>
+                        <button onClick={() => tryAgain(formData!)} className="w-full bg-yellow-500 text-white py-2 rounded mt-2">
+                            Try Again
+                        </button>
+                    </div>
+                )}
             </form>
         </div>
     );

@@ -3,6 +3,14 @@ import { createGenerationInDb, getGenerationsByUserId } from '../services/genera
 
 export const createGeneration = async (req: Request, res: Response) => {
     try {
+        // Simulate a 1-2 second delay
+        await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
+
+        // 20% chance of a "Model overloaded" error
+        if (Math.random() < 0.2) {
+            return res.status(503).json({ message: "Model overloaded" });
+        }
+
         const { prompt, style } = req.body;
         const userId = (req as any).user.userId;
         const imageUrl = `/uploads/${(req.file as any).filename}`;
