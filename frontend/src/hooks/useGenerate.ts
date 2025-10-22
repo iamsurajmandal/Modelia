@@ -4,9 +4,10 @@ import api from '../api';
 const useGenerate = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [retries, setRetries] = useState(0);
     const abortControllerRef = useRef<AbortController | null>(null);
 
-    const generate = async (formData: FormData, currentRetries = 0) => {
+    const generate = async (formData: FormData) => {
         setIsLoading(true);
         setError(null);
         abortControllerRef.current = new AbortController();
@@ -16,13 +17,22 @@ const useGenerate = () => {
                 signal: abortControllerRef.current.signal,
             });
             setIsLoading(false);
+            setRetries(0);
             return response.data;
-        } catch (err) {
-            if ((err as any).response && (err as any).response.status === 500 && currentRetries < 3) {
-                await new Promise((resolve) => setTimeout(resolve, 1000));
-                return generate(formData, currentRetries + 1);
+        } catch (err: any) {
+            if (err.name === 'CanceledError') {
+                setIsLoading(false);
+                return;
             }
-            setError('Error generating image');
+
+            if (err.response && err.response.data.message === 'Model overloaded' && retries < 3) {
+                setError('Model is overloaded. Retrying...');
+                setRetries(retries + 1);
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+                return generate(formData);
+            }
+
+            setError('Error generating image. Please try again.');
             setIsLoading(false);
         }
     };
@@ -33,7 +43,13 @@ const useGenerate = () => {
         }
     };
 
-    return { isLoading, error, generate, abort };
+    const tryAgain = (formData: FormData) => {
+        setRetries(0);
+        setError(null);
+        generate(formData);
+    }
+
+    return { isLoading, error, generate, abort, tryAgain };
 };
 
 export default useGenerate;

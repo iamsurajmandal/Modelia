@@ -1,0 +1,31 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "This assignment is designed to evaluate your full stack engineering skills, code quality, and how you use modern tools (including AI) to develop, test, and collaborate.",
+  "main": "signup.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamsurajmandal/Modelia.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/iamsurajmandal/Modelia/issues"
+  },
+  "homepage": "https://github.com/iamsurajmandal/Modelia#readme",
+  "dependencies": {
+    "axios": "^1.12.2"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "playwright": "^1.56.1"
+  }
+}

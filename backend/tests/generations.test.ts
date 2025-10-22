@@ -12,24 +12,15 @@ jest.mock('../src/middlewares/authMiddleware', () => ({
     }),
 }));
 
+global.Math.random = () => 0.5;
+
 const app = express();
 app.use(express.json());
 app.use('/generations', generationsRouter);
 
 describe('Generations Routes', () => {
     describe('POST /generations', () => {
-        const random = Math.random;
-
-        beforeEach(() => {
-            Math.random = jest.fn();
-        });
-
-        afterEach(() => {
-            Math.random = random;
-        });
-
         it('should create a new generation', async () => {
-            (Math.random as jest.Mock).mockReturnValue(0.5);
             (generationService.createGenerationInDb as jest.Mock).mockResolvedValue({ id: 1 });
 
             const res = await request(app)

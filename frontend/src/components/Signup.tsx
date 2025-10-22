@@ -10,9 +10,8 @@ const Signup: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await api.post('/auth/signup', { email, password });
-            localStorage.setItem('token', response.data.token);
-            navigate('/');
+            await api.post('/auth/signup', { email, password });
+            navigate('/login');
         } catch (error) {
             console.error(error);
         }
@@ -25,6 +24,7 @@ const Signup: React.FC = () => {
                 <div className="mb-4">
                     <label className="block text-gray-700">Email</label>
                     <input
+                        id="email"
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -34,6 +34,7 @@ const Signup: React.FC = () => {
                 <div className="mb-4">
                     <label className="block text-gray-700">Password</label>
                     <input
+                        id="password"
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
