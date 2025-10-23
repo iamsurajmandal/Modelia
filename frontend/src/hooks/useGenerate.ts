@@ -32,7 +32,7 @@ const useGenerate = () => {
                 return generate(formData);
             }
 
-            setError('Error generating image. Please try again.');
+            setError(err.response?.data?.message || 'Error generating image. Please try again.');
             setIsLoading(false);
         }
     };
